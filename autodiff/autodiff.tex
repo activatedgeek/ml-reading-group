@@ -1,0 +1,321 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{metropolis}
+
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+
+
+\hypersetup{bookmarksnumbered}
+
+\title{The Magic of Auto Differentiation}
+\author{Sanyam Kapoor, \href{mailto:sanyam@nyu.edu}{sanyam@nyu.edu}}
+\date{October 21, 2017}
+\institute{Courant Institute, NYU}
+
+\begin{document}
+\maketitle
+
+\section{Relevance to Machine Learning}
+
+\begin{frame}{The Learning Problem}
+Given an a set of instances $S: (\mathcal{X}, \mathcal{Y})$ drawn i.i.d from some
+distribution, predict the underlying unknown distribution $\mathcal{D}$.
+\end{frame}
+
+\begin{frame}{One Approach to Learning}
+We define a loss function $\mathcal{L}$ on some hypothesis $h \in H$ (hypothesis set) and 
+aim to minimize the loss across sample space
+
+\begin{align}
+\underset{\theta}{\texttt{argmin }} \mathcal{L}(\mathcal{Y}, h(\mathcal{X}, \theta))
+\end{align}
+
+where $\theta$ is the set of parameters of the hypothesis.
+
+\end{frame}
+
+\begin{frame}{Minimizing the Loss}
+Differentiation is our tool! Compute the solution to
+
+\begin{align}
+\nabla_\theta \mathcal{L} = \frac{d \mathcal{L}}{d \theta} = 0
+\end{align}
+
+And, we have solved the learning problem. But have we?
+
+\end{frame}
+
+\section{Techniques in Differentiation}
+
+\begin{frame}{A Sample Function}
+
+Consider a multi-variate function
+
+\begin{align}
+f(x_1,x_2) &= x_1\sqrt{log \frac{x_1}{sin(x_2^2)}} \label{eq:sample}
+\end{align}
+
+I just cooked that up!
+
+\end{frame}
+
+\begin{frame}{Manual Differentiation}
+
+\begin{align}
+\frac{\partial f}{\partial x_1} &= \sqrt{\left(log\frac{x_1}{sin(x_2^2)}\right)} + \frac{1}{2} \left(log\frac{x_1}{sin(x_2^2)}\right)^{-\frac{1}{2}} \\
+\frac{\partial f}{\partial x_2} &= -x_1x_2cot(x_2^2)\left(log\frac{x_1}{sin(x_2^2)}\right)^{-\frac{1}{2}}
+\end{align}
+
+\begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+      \textbf{Pros}
+      \begin{itemize}
+        \item Irreducable form
+        \item Hardcodes everything
+      \end{itemize}
+
+    \column{0.5\textwidth}
+      \textbf{Cons}
+      \begin{itemize}
+        \item Time Consuming
+        \item Error Prone
+      \end{itemize}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Numerical Differentiation}
+
+Method of finite differences derived from First-Order Approximation of \textit{Taylor Series}
+(higher order methods as well) \cite{Burden:1988:NAE:49376}
+
+\begin{align}
+\lim_{h \to 0} \left(\frac{\partial f}{\partial x}\right) &= \frac{f(x+h)-f(x)}{h} \\
+\lim_{h \to 0} \left(\frac{\partial f}{\partial x}\right) &= \frac{f(x+h)-f(x-h)}{2h}
+\end{align}
+
+\begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+      \textbf{Pros}
+      \begin{itemize}
+        \item Fair approximations
+      \end{itemize}
+
+    \column{0.5\textwidth}
+      \textbf{Cons}
+      \begin{itemize}
+        \item Ill-conditioned and unstable
+        \item Truncation and Round-off errors
+      \end{itemize}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Symbolic Differentiation}
+
+Compute actual symbols from a repository of basic rules like the sum rule or the product
+rule represented as concrete data structures.
+
+Used in algebra systems like \textit{Mathematica}, \textit{Theano}. A deterministic and 
+mechanistic process just like how one would code!
+
+\begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+      \textbf{Pros}
+      \begin{itemize}
+		\item Insight into structure of problem
+		\item Build analytical solutions (e.g. the classic Normal Equation for Linear Regression)
+      \end{itemize}
+
+    \column{0.5\textwidth}
+      \textbf{Cons}
+      \begin{itemize}
+        \item Expression Swell
+      \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Automatic Differentiation}
+
+\textbf{Problem}
+Calculate the sensitivity of output w.r.t input (Jacobian)
+
+\textbf{Observations}
+\begin{itemize}
+\item[1.] Need the exact derivatives and not approximations
+\item[2.] Don't really need the the symbolic form
+\end{itemize}
+
+\textbf{Solution} Chain rule (but just the smart way!)
+
+\end{frame}
+
+\section{Automatic Differentiation}
+
+\begin{frame}{Computational Graphs}
+
+Represents flow of values across a non-trivial computation \cite{Bauer1974}. Core of modern computational
+libraries like \textit{PyTorch} and \textit{Tensorflow}.
+
+Consider each node as a special gate. Looks familiar?
+
+\begin{figure}[H]
+\caption{Computational Graph for Equation \ref{eq:sample}}
+\includegraphics[width=\textwidth]{computational_graph}
+\centering
+\label{img:computational_graph}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Forward Mode Differentiation}
+
+Computes the sensitivity of the output w.r.t. one input parameter.
+
+Any hypothesis $h: \mathbb{R}^m \to \mathbb{R}$ would require $m$ forward mode
+differentiations to compute sensitivity w.r.t each input parameter.
+
+\textit{Forward Primal Trace} is the algebraic version of computational graph. Read
+top-down.
+
+\textit{Forward Tangent Trace} calculates $\frac{\partial}{\partial x }$. Read top-down.
+
+\end{frame}
+
+\begin{frame}{Forward Mode Example}
+\begin{columns}[T,onlytextwidth]
+    \column{0.4\textwidth}
+      \textbf{Forward Primal Trace}
+      \begin{align*}
+		v_{-1} &= x_1 \\
+		v_0 &= x_2 \\
+		v_1 &= v_0^2 \\
+		v_2 &= sin(v_1) \\
+		v_3 &= \frac{v_{-1}}{v_2} \\
+		v_4 &= log(v_3) \\
+		v_5 &= \sqrt{v_4} \\
+		v_6 &= v_{-1} * v_5 \\
+		y &= v_6
+      \end{align*}
+
+    \column{0.6\textwidth}
+      \textbf{Forward Tangent Trace $\frac{\partial}{\partial x_2 }$}
+	  \begin{align*}
+		\dot{v}_{-1} &= 0 \\
+		\dot{v}_0 &= 1 \\
+		\dot{v}_1 &= 2v_0\dot{v}_0 \\
+		\dot{v}_2 &= cos(v_1)\dot{v}_1 \\
+		\dot{v}_3 &= \frac{\dot{v}_{-1}v_2 - v_{-1}\dot{v}_2}{v_2^2} \\
+		\dot{v}_4 &= \frac{1}{v_3}\dot{v}_3 \\
+		\dot{v}_5 &= -\frac{1}{2}v_4^{-\frac{1}{2}}\dot{v}_4 \\
+		\dot{y} = \dot{v}_6 &= \dot{v}_{-1} v_5 + v_{-1}\dot{v}_5
+	  \end{align*}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Reverse Mode Differentiation}
+
+Computes the sensitivity of the output w.r.t. all input parameters.
+
+Any hypothesis $h: \mathbb{R}^m \to \mathbb{R}$ would require $\textbf{ONE}$ reverse
+mode differentiation.
+
+Also called \textit{Reverse Mode Accumulator}.
+
+\begin{align}
+\bar{v}_i = \frac{\partial f}{\partial v_i} \tag{adjoint of a variable}
+\end{align}
+
+\textit{Reverse Adjoint Trace} calculates $\frac{\partial f}{\partial}$. Read bottom-up.
+
+\end{frame}
+
+\begin{frame}{Reverse Mode Example}
+\begin{columns}[T,onlytextwidth]
+    \column{0.4\textwidth}
+      \textbf{Forward Primal Trace}
+      \begin{align*}
+		v_{-1} &= x_1 \\
+		v_0 &= x_2 \\
+		v_1 &= v_0^2 \\
+		v_2 &= sin(v_1) \\
+		v_3 &= \frac{v_{-1}}{v_2} \\
+		v_4 &= log(v_3) \\
+		v_5 &= \sqrt{v_4} \\
+		v_6 &= v_{-1} * v_5 \\
+		y &= v_6
+      \end{align*}
+
+    \column{0.6\textwidth}
+      \textbf{Reverse Adjoint Trace $\frac{\partial f}{\partial}$}
+	  \begin{align*}
+		\bar{v}_0 &= \bar{v}_1 \frac{\partial v_1}{\partial v_0} \\
+		\bar{v}_1 &= \bar{v}_2 \frac{\partial v_2}{\partial v_1} \\
+		\bar{v}_{-1} &= \bar{v}_{-1} + \bar{v}_3\frac{\partial v_3}{\partial v_{-1}}; \bar{v}_2 = \bar{v}_3\frac{\partial v_3}{\partial v_2} \\ 
+		\bar{v}_3 &= \bar{v}_4 \frac{\partial v_4}{\partial v_3} \\
+		\bar{v}_4 &= \bar{v}_5 \frac{\partial v_5}{\partial v_4} \\
+		\bar{v}_{-1} &= \bar{v}_6 \frac{\partial v_6}{\partial v_{-1}}; \bar{v}_5 = \bar{v}_6 \frac{\partial v_6}{\partial v_5} \\
+		\bar{y} &= \bar{v}_6 = 1
+	  \end{align*}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Reverse Mode in Practice}
+
+More commonly known as the \textit{Backpropagation algorithm}.
+
+For a generic hypothesis $h: \mathbb{R}^m \to \mathbb{R}^n$, we need $n$
+reverse mode differentiations versus $m$ forward mode differentiations. 
+Helpful when $n \ll m$.
+
+For instance, \textit{Dense Interpolated Embedding Model DIEM} \cite{Trask2015}
+proposed an architecture with $\sim 160b$ parameters and output syntactic embeddings
+of size $1000+$.
+
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Reverse Mode in PyTorch}
+
+\begin{lstlisting}[language=Python]
+import torch
+from torch.autograd import Variable
+
+def main():
+    N, D_in, H, D_out = 64, 1000, 100, 10
+    x = Variable(torch.randn(N, D_in))
+    y = Variable(torch.randn(N, D_out))
+
+    model = torch.nn.Sequential(
+        torch.nn.Linear(D_in, H),
+        torch.nn.ReLU(),
+        torch.nn.Linear(H, D_out),
+    )    
+    loss_fn = torch.nn.MSELoss(size_average=False)
+    optimizer = torch.optim.SGD(
+    		model.parameters(),
+    		lr=1e-4)
+    
+    for t in range(500):
+        y_pred = model(x)
+        loss = loss_fn(y_pred, y)
+        optimizer.zero_grad()
+        loss.backward()  # Reverse Mode!
+        optimizer.step()
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+
+\nocite{DBLP:journals/corr/BaydinPR15}
+\nocite{Griewank2008}
+
+\frametitle{References}
+\bibliographystyle{amsalpha}
+\bibliography{references.bib}
+\end{frame}
+
+\end{document}

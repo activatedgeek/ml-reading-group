@@ -1,0 +1,13 @@
+.DS_Store
+
+# TeX related
+
+*.aux
+*.bbl
+*.blg
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
