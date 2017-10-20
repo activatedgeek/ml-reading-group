@@ -2,7 +2,7 @@
 
 ## Presentations
 
-* [The Magic of Auto Differentiation](./autodiff/autodiff.tex)
+* The Magic of Auto Differentiation [[LaTeX](./autodiff/autodiff.tex) | PDF]
 
 ## Compilation
 
@@ -12,7 +12,7 @@ pipeline `pdflatex` -> `bibtex` -> `pdflatex` -> `pdflatex`.
 To build presentation, run
 
 ```
-$ make path/to/presentation.prez
+$ make path/to/presentation.prez # where path/to/presentation.tex exists
 ```
 
 which should create a final PDF presentation at `path/to/presentation.pdf`.
