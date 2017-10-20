@@ -1,11 +1,11 @@
 PWD := $(shell pwd)
 
-%.prez:
-	@make $(basename $@).pdf && make $(basename $@).bbl
-	@rm $(basename $@).pdf && make $(basename $@).pdf
-	@rm $(basename $@).pdf && make $(basename $@).pdf
+%.pdf:
+	@make $(basename $@).nav && make $(basename $@).bbl
+	@rm $(basename $@).nav && make $(basename $@).nav
+	@rm $(basename $@).nav && make $(basename $@).nav
 
-%.pdf: %.tex
+%.nav: %.tex
 	@cd $(dir $@) && pdflatex -interaction=nonstopmode -halt-on-error $(notdir $^) && cd $(PWD)
 
 %.bbl: %.aux
@@ -18,4 +18,4 @@ clean:
 		-or -name "*.snm" -or -name "*.toc" -or -name "*.vrb" \) \
 		-delete
 
-.PHONY: %.prez clean
+.PHONY: clean

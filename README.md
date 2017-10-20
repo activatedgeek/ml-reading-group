@@ -6,13 +6,10 @@
 
 ## Compilation
 
-All presentations are built in `LaTeX` with the Metropolis theme using the
-pipeline `pdflatex` -> `bibtex` -> `pdflatex` -> `pdflatex`.
+All presentations are built in `LaTeX Beamer` with the Metropolis theme.
 
-To build presentation, run
+For a beamer presentation file at `path/to/presentation.tex`, run
 
 ```
-$ make path/to/presentation.prez # where path/to/presentation.tex exists
+$ make path/to/presentation.pdf
 ```
-
-which should create a final PDF presentation at `path/to/presentation.pdf`.
