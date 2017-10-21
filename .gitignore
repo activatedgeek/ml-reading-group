@@ -1,7 +1,6 @@
 .DS_Store
 
 # TeX related
-
 *.aux
 *.bbl
 *.blg
@@ -12,3 +11,6 @@
 *.snm
 *.toc
 *.vrb
+
+# folders
+dist/

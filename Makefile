@@ -1,7 +1,10 @@
+DIST := dist
 PWD := $(shell pwd)
 
 all:
 	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/pdf/ | xargs -P 4 -L 1 make
+	@mkdir -p $(DIST)
+	@find . -type f -name "*.pdf" -exec mv {} $(DIST) \;
 
 %.pdf:
 	@make $(basename $@).nav && make $(basename $@).bbl
@@ -20,5 +23,6 @@ clean:
 		-or -name "*.log" -or -name "*.nav" -or -name "*.out" \
 		-or -name "*.snm" -or -name "*.toc" -or -name "*.vrb" \) \
 		-delete
+	@rm -r $(DIST)
 
 .PHONY: all clean

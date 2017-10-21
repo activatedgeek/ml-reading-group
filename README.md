@@ -12,8 +12,8 @@ All presentations are built in `LaTeX Beamer` with the Metropolis theme.
 $ make all
 ```
 
-This will find all tex files and builds the final presentations in their
-respective folders.
+This will find all tex files and builds the final presentations in the `dist`
+folder.
 
 ## Compile a specific file
 
