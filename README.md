@@ -1,4 +1,4 @@
-# Paper Reading Group
+# Machine Learning Reading Group
 
 ## Presentations
 
