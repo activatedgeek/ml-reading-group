@@ -1,5 +1,8 @@
 PWD := $(shell pwd)
 
+all:
+	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/pdf/ | xargs -P 4 -L 1 make
+
 %.pdf:
 	@make $(basename $@).nav && make $(basename $@).bbl
 	@rm $(basename $@).nav && make $(basename $@).nav
@@ -18,4 +21,4 @@ clean:
 		-or -name "*.snm" -or -name "*.toc" -or -name "*.vrb" \) \
 		-delete
 
-.PHONY: clean
+.PHONY: all clean
