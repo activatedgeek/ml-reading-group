@@ -2,9 +2,10 @@
 
 ## Presentations
 
-All presentations are built in `LaTeX Beamer` with the Metropolis theme.
+All presentations are built in `LaTeX Beamer` with the Metropolis theme. For
+now, the slides have been hosted on `Slideshare`.
 
-* The Magic of Auto Differentiation ([LaTeX](./autodiff/autodiff.tex) | PDF)
+* The Magic of Auto Differentiation ([LaTeX](./autodiff/autodiff.tex) | [PDF](https://www.slideshare.net/SanyamKapoor4/the-magic-of-auto-differentiation))
 
 ## Compile All
 
