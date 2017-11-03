@@ -1,17 +1,18 @@
 DIST := dist
 PWD := $(shell pwd)
 
+# Runs pdflatex + bibtex + 2 x pdflatex to generate the final file
 all:
+	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/pdf/ | xargs -P 4 -L 1 make
+	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/bbl/ | xargs -P 4 -L 1 make
+	@find . -type f -name "*.pdf" -delete
+	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/pdf/ | xargs -P 4 -L 1 make
+	@find . -type f -name "*.pdf" -delete
 	@find . -type f -name "*.tex" -exec echo {} \; | sed -e s/tex/pdf/ | xargs -P 4 -L 1 make
 	@mkdir -p $(DIST)
 	@find . -type f -name "*.pdf" -exec mv {} $(DIST) \;
 
-%.pdf:
-	@make $(basename $@).nav && make $(basename $@).bbl
-	@rm $(basename $@).nav && make $(basename $@).nav
-	@rm $(basename $@).nav && make $(basename $@).nav
-
-%.nav: %.tex
+%.pdf: %.tex
 	@cd $(dir $@) && pdflatex -interaction=nonstopmode -halt-on-error $(notdir $^) && cd $(PWD)
 
 %.bbl: %.aux
