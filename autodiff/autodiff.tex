@@ -26,7 +26,7 @@ distribution, predict the underlying unknown distribution $\mathcal{D}$.
 \end{frame}
 
 \begin{frame}{One Approach to Learning}
-We define a loss function $\mathcal{L}$ on some hypothesis $h \in H$ (hypothesis set) and 
+We define a loss function $\mathcal{L}$ on some hypothesis $h \in H$ (hypothesis set) and
 aim to minimize the loss across sample space
 
 \begin{align}
@@ -119,7 +119,7 @@ Method of finite differences derived from First-Order Approximation of \textit{T
 Compute actual symbols from a repository of basic rules like the sum rule or the product
 rule represented as concrete data structures.
 
-Used in algebra systems like \textit{Mathematica}, \textit{Theano}. A deterministic and 
+Used in algebra systems like \textit{Mathematica}, \textit{Theano}. A deterministic and
 mechanistic process just like how one would code!
 
 \begin{columns}[T,onlytextwidth]
@@ -254,7 +254,7 @@ Also called \textit{Reverse Mode Accumulator}.
 	  \begin{align*}
 		\bar{v}_0 &= \bar{v}_1 \frac{\partial v_1}{\partial v_0} \\
 		\bar{v}_1 &= \bar{v}_2 \frac{\partial v_2}{\partial v_1} \\
-		\bar{v}_{-1} &= \bar{v}_{-1} + \bar{v}_3\frac{\partial v_3}{\partial v_{-1}}; \bar{v}_2 = \bar{v}_3\frac{\partial v_3}{\partial v_2} \\ 
+		\bar{v}_{-1} &= \bar{v}_{-1} + \bar{v}_3\frac{\partial v_3}{\partial v_{-1}}; \bar{v}_2 = \bar{v}_3\frac{\partial v_3}{\partial v_2} \\
 		\bar{v}_3 &= \bar{v}_4 \frac{\partial v_4}{\partial v_3} \\
 		\bar{v}_4 &= \bar{v}_5 \frac{\partial v_5}{\partial v_4} \\
 		\bar{v}_{-1} &= \bar{v}_6 \frac{\partial v_6}{\partial v_{-1}}; \bar{v}_5 = \bar{v}_6 \frac{\partial v_6}{\partial v_5} \\
@@ -268,7 +268,7 @@ Also called \textit{Reverse Mode Accumulator}.
 More commonly known as the \textit{Backpropagation algorithm}.
 
 For a generic hypothesis $h: \mathbb{R}^m \to \mathbb{R}^n$, we need $n$
-reverse mode differentiations versus $m$ forward mode differentiations. 
+reverse mode differentiations versus $m$ forward mode differentiations.
 Helpful when $n \ll m$.
 
 For instance, \textit{Dense Interpolated Embedding Model DIEM} \cite{Trask2015}
@@ -292,12 +292,12 @@ def main():
         torch.nn.Linear(D_in, H),
         torch.nn.ReLU(),
         torch.nn.Linear(H, D_out),
-    )    
+    )
     loss_fn = torch.nn.MSELoss(size_average=False)
     optimizer = torch.optim.SGD(
     		model.parameters(),
     		lr=1e-4)
-    
+
     for t in range(500):
         y_pred = model(x)
         loss = loss_fn(y_pred, y)
@@ -314,7 +314,7 @@ def main():
 \nocite{Griewank2008}
 
 \frametitle{References}
-\bibliographystyle{amsalpha}
+\bibliographystyle{apalike}
 \bibliography{references.bib}
 \end{frame}
 

@@ -1,0 +1,168 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{metropolis}
+
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\hypersetup{bookmarksnumbered}
+
+\title{One-Shot Learning and Siamese Networks}
+\author{Sanyam Kapoor, \href{mailto:sanyam@nyu.edu}{sanyam@nyu.edu}}
+\date{November 4, 2017}
+\institute{Courant Institute, NYU}
+
+\begin{document}
+\maketitle
+
+\section{What is One-Shot Learning?}
+
+\begin{frame}{Motivation}
+
+\begin{itemize}
+\item Human cognition is remarkable. Only need a few examples to generalize.
+
+\item Even when tasks are not obviously related, humans tend to 
+easily ``transfer" learnings. They ``learn to learn".
+
+\item To the contrary, traditional Supervised Learning techniques deliver expertise for
+a niche problem but miserably fail even with a slight variation of the task.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{A visual task}
+
+\begin{figure}[H]
+\caption{Which is the closest vehicle to the one highlighed? \cite{Lake_oneshot}}
+\includegraphics[width=3in]{cluster_vehicles}
+\centering
+\label{img:cluster_vehicles}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{An even simpler visual task}
+
+\begin{figure}[H]
+\caption{Can you figure which animal is the closest to test image? \cite{Koch2015SiameseNN}}
+\includegraphics[width=3in]{animals}
+\centering
+\label{img:animals}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{The One-Shot Learning Task}
+
+Can we mathematically model this? Yes!
+
+Given some training data, and an unseen test sample (possibly from a new
+distribution but reasonably similar to the training samples), can we figure which
+class does the sample belong to? (May be even a new class!)
+
+This idea of learning from very few samples is generalized in a framework
+known as \textit{Few-Shot Learning}.
+
+\end{frame}
+
+\section{Approaches to One-Shot Learning}
+
+\begin{frame}{k-Nearest Neighbors}
+
+The most common sense approach is \textit{k-NNs}.
+
+Realize some similarity metric in a suitably high-dimensional space which captures
+all the features of the problem domain.
+
+But, feature engineering is very hard! Even if a domain expert designs one, the model
+can be drastically perturbed by only slight variations of the input.
+
+\end{frame}
+
+\begin{frame}{Meta-Learning}
+
+More recently, Memory-Augmented Neural Networks (\textbf{MANN}) has been
+proposed which uses external memory representation of description of the seen
+data.
+
+\textit{Meta-Learning} approaches where a ``meta-learner" learns to learn. One
+neural networks observes and incrementally improves how the other should update
+its weights.
+
+Very active area of research!
+
+\end{frame}
+
+\begin{frame}{Metric Learning}
+
+Coming back to the problem of finding a similarity metric in a high-dimensional
+space. What if we don't hand-code it and let our models learn by themselves?
+
+\end{frame}
+
+\section{One-Shot Learning via Siamese Neural Networks}
+
+\begin{frame}{Omniglot Dataset}
+
+\begin{figure}[H]
+\caption{The Omniglot Dataset, 50 alphabets, 1600+ characters  \cite{Lake_oneshot}}
+\includegraphics[width=3in]{omniglot_visual}
+\centering
+\label{img:omniglot_visual}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{A Verification Task}
+
+Given a pair of images containing the handwritten characters, can we verify whether
+they are the same character? This task was used first for signature verification
+\cite{Bromley94}.
+
+Later used for Face Verification \cite{Chopra2005} using a \textit{Contrastive
+Loss Function}.
+
+\end{frame}
+
+\begin{frame}{The Architecture}
+
+\begin{figure}[H]
+\caption{A Siamese Neural Network \cite{Koch2015SiameseNN}}
+\includegraphics[width=3in]{siamese_architecture}
+\centering
+\label{img:siamese_architecture}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Architecture Details}
+
+\begin{itemize}
+\item Fully Connected Layers with non-linearity as ReLU
+\item A weighted $L_1$ distance between the two outputs of Siamese Network
+\item Regularized \textit{cross-entropy} as the loss function
+\item Weight initialization done as $\frac{1}{fan-in}$, a variant of Xavier initialization
+\item Data augmentation by affine transformations.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Code}
+
+Github!
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+
+\nocite{LiFeiFei2006}
+
+\frametitle{References}
+\bibliographystyle{apalike}
+\bibliography{references.bib}
+\end{frame}
+
+\end{document}
